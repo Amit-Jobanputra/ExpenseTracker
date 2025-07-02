@@ -14,19 +14,19 @@ function App() {
           <div className="flex gap-6">
             <Link
               to="/"
-              className="hover:underline text-yellow-300 transition duration-200"
+              className="hover:underline text-shadow-fuchsia-100 transition duration-200"
             >
               Login
             </Link>
             <Link
               to="/register"
-              className="hover:underline text-yellow-300 transition duration-200"
+              className="hover:underline text-shadow-fuchsia-100 transition duration-200"
             >
               Register
             </Link>
             <Link
               to="/dashboard"
-              className="hover:underline text-yellow-300 transition duration-200"
+              className="hover:underline text-shadow-fuchsia-100 transition duration-200"
             >
               Dashboard
             </Link>

@@ -6,7 +6,7 @@ import Dashboard from "./Dashboard";
 function App() {
   return (
     <BrowserRouter>
-      <nav className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg">
+      <nav className="bg-gradient-to-r from-teal-600 to-cyan-500 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-extrabold tracking-wide">
             💸 Expense Tracker

@@ -13,29 +13,28 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-   axios.post('http://localhost:8000/api/login', {
-    email:email,
-    password:password,
-   })
-    .then((response) => {
-      console.log(response);
-      const token = response.data.token;
-      console.log("Token:", token);
-      jscookie.set("token", token); 
-      navigate("/dashboard"); 
-    })
-    .catch((error) => {
-      if(error.response) {
-        setError(error.response.data.message || "Login failed. Please try again.");
-      }
-      else{
-        setError("Something went wrong. Please try again later.");
-      }
-    });
-      
-      
+    axios
+      .post("http://localhost:8000/api/login", {
+        email: email,
+        password: password,
+      })
+      .then((response) => {
+        console.log(response);
+        const token = response.data.token;
+        console.log("Token:", token);
+        jscookie.set("token", token);
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        if (error.response) {
+          setError(
+            error.response.data.message || "Login failed. Please try again."
+          );
+        } else {
+          setError("Something went wrong. Please try again later.");
+        }
+      });
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-200 via-white to-teal-100 flex items-center justify-center px-4">

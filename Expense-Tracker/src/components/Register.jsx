@@ -9,12 +9,16 @@ const Register = () => {
     password: "",
   });
 
+  const [Loading, setLoading] = useState(false);
+
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
 
     axios
       .post("http://localhost:8000/api/register", formData)
@@ -25,9 +29,11 @@ const Register = () => {
           email: "",
           password: "",
         });
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
       });
   };
 
@@ -68,7 +74,7 @@ const Register = () => {
               type="submit"
               className="w-full py-3 px-4 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold rounded-md shadow-md hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-300 ease-in-out"
             >
-              Register
+              {Loading ? "Loading..." : "Submit"}
             </button>
           </form>
           <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">

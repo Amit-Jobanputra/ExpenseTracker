@@ -10,6 +10,7 @@ const Register = () => {
   });
 
   const [Loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,6 +31,7 @@ const Register = () => {
           password: "",
         });
         setLoading(false);
+        setMessage("successfully registered!");
       })
       .catch((error) => {
         console.log(error);
@@ -49,6 +51,17 @@ const Register = () => {
           <h2 className="text-3xl font-bold text-center text-teal-700 mb-8">
             Register
           </h2>
+
+          {/* SET MESSAGE */}
+          {message.length != 0 ? (
+            <div className="bg-green-100 text-green-400-700 text-sm p-2 rounded mb-4 border border-green-300">
+              {message}
+            </div>
+          ) : (
+            ""
+          )}
+
+          {/* REGISTER FORM */}
           <form className="space-y-6" onSubmit={handleSubmit}>
             {registerFormData.map((item, i) => (
               <div key={i}>

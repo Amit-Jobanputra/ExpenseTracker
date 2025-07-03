@@ -1,5 +1,8 @@
 import React, { useState } from "react";
+
 import axios from "axios";
+import jscookie from "js-cookie";
+
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -25,6 +28,10 @@ function Login() {
           withCredentials: true,
         }
       );
+
+      if (response) {
+        jscookie.set("token", response.token);
+      }
 
       console.log("Login successful", response.data);
       navigate("/dashboard");

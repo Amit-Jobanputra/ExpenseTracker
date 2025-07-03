@@ -13,33 +13,29 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    try {
-      await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
-        withCredentials: true,
-      });
-
-      const response = await axios.post(
-        "http://localhost:8000/api/login",
-        {
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response) {
-        jscookie.set("token", response.token);
+   axios.post('http://localhost:8000/api/login', {
+    email:email,
+    password:password,
+   })
+    .then((response) => {
+      console.log(response);
+      const token = response.data.token;
+      console.log("Token:", token);
+      jscookie.set("token", token); 
+      navigate("/dashboard"); 
+    })
+    .catch((error) => {
+      if(error.response) {
+        setError(error.response.data.message || "Login failed. Please try again.");
       }
-
-      console.log("Login successful", response.data);
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-      setError("Login failed. Check your credentials.");
-    }
+      else{
+        setError("Something went wrong. Please try again later.");
+      }
+    });
+      
+      
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-200 via-white to-teal-100 flex items-center justify-center px-4">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jscookie from "js-cookie";
+import { useNavigate } from "react-router-dom";
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
   const [amount, setAmount] = useState("");
@@ -11,10 +12,14 @@ function Dashboard() {
   const token = jscookie.get("token");
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
+  const navigate = useNavigate();
 
   console.log("Token:", token);
   // Fetch all expenses on mount
   useEffect(() => {
+    if (!jscookie.get("token")) {
+      navigate("/");
+    }
     fetchExpenses();
   }, []);
 
@@ -42,8 +47,12 @@ function Dashboard() {
         await axios.put(
           `http://localhost:8000/api/expenses/${editingId}`,
           data,
-          { withCredentials: true }
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+          }
         );
+
         setEditingId(null);
       } else {
         console.log("Adding new expense:", data);
@@ -77,8 +86,10 @@ function Dashboard() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8000/api/expenses/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
+
       fetchExpenses();
     } catch (err) {
       console.error(err);
@@ -92,7 +103,7 @@ function Dashboard() {
         Dashboard - Manage Expenses
       </h2>
 
-      {error && <p className="text-red-500">{error}</p>}
+      {/* {error && <p className="text-red-500">{error}</p>} */}
 
       <form onSubmit={handleAddOrUpdate} className="mb-6">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
@@ -167,7 +178,7 @@ function Dashboard() {
                 <td className="border p-2">{exp.amount}</td>
                 <td className="border p-2">{exp.category}</td>
                 <td className="border p-2">{exp.date}</td>
-                <td className="border p-2">{exp.notes || "Null"}</td>
+                <td className="border p-2">{exp.notes || "—"}</td>
                 <td className="border p-2 space-x-2">
                   <button
                     onClick={() => handleEdit(exp)}

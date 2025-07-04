@@ -10,6 +10,7 @@ class AuthController extends Controller
 {
     public function register(Request $r)
     {
+        
         $data = $r->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',

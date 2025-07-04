@@ -1,32 +1,42 @@
+
 // src/pages/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jscookie from "js-cookie";
+import { Navigate, useNavigate } from "react-router-dom";
+
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
+  const [notes, setNotes] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState("");
   const token = jscookie.get("token");
-  const [date,setDate] = useState("");
-  const [title,setTitle]=useState("");
+  const [date, setDate] = useState("");
+  const [title, setTitle] = useState("");
+  const navigate = useNavigate();
+
   console.log("Token:", token);
+
   // Fetch all expenses on mount
   useEffect(() => {
+    if (!jscookie.get("token")) {
+      console.log(true);
+      navigate("/");
+      window.location.reload();
+    }
     fetchExpenses();
-  }, []);
+  }, [navigate]);
 
   const fetchExpenses = async () => {
     try {
-
       const response = await axios.get("http://localhost:8000/api/expenses", {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
       console.log(response);
-      
+
       setExpenses(response.data);
     } catch (err) {
       console.error(err);
@@ -36,26 +46,31 @@ function Dashboard() {
 
   const handleAddOrUpdate = async (e) => {
     e.preventDefault();
-    const data = { amount, category, description,title,date };
+    const data = { amount, category, notes, title, date };
 
     try {
       if (editingId) {
         await axios.put(
           `http://localhost:8000/api/expenses/${editingId}`,
           data,
-          { withCredentials: true }
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+          }
         );
+
         setEditingId(null);
       } else {
         console.log("Adding new expense:", data);
         await axios.post("http://localhost:8000/api/expenses", data, {
-           headers: { Authorization: `Bearer ${token}` }, withCredentials: true,
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
         });
       }
 
       setAmount("");
       setCategory("");
-      setDescription("");
+      setNotes("");
       setDate("");
       setTitle("");
       fetchExpenses();
@@ -68,7 +83,7 @@ function Dashboard() {
   const handleEdit = (expense) => {
     setAmount(expense.amount);
     setCategory(expense.category);
-    setDescription(expense.description);
+    setNotes(expense.notes);
     setDate(expense.date);
     setTitle(expense.title);
     setEditingId(expense.id);
@@ -77,8 +92,10 @@ function Dashboard() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8000/api/expenses/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
+
       fetchExpenses();
     } catch (err) {
       console.error(err);
@@ -122,9 +139,9 @@ function Dashboard() {
           />
           <input
             type="text"
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            placeholder="notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
             className="p-2 border rounded w-full"
           />
           <input
@@ -153,10 +170,10 @@ function Dashboard() {
           <thead>
             <tr className="bg-teal-100">
               <th className="border p-2">Title</th>
-                <th className="border p-2">Amount</th>
+              <th className="border p-2">Amount</th>
               <th className="border p-2">Category</th>
               <th className="border p-2">Date</th>
-                <th className="border p-2">Description</th>
+              <th className="border p-2">Description</th>
               <th className="border p-2">Actions</th>
             </tr>
           </thead>
@@ -167,7 +184,7 @@ function Dashboard() {
                 <td className="border p-2">{exp.amount}</td>
                 <td className="border p-2">{exp.category}</td>
                 <td className="border p-2">{exp.date}</td>
-                <td className="border p-2">{exp.notes||"Null"}</td>
+                <td className="border p-2">{exp.notes || "—"}</td>
                 <td className="border p-2 space-x-2">
                   <button
                     onClick={() => handleEdit(exp)}

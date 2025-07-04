@@ -11,6 +11,7 @@ function Dashboard() {
   const token = jscookie.get("token");
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
+
   console.log("Token:", token);
   // Fetch all expenses on mount
   useEffect(() => {
@@ -166,6 +167,7 @@ function Dashboard() {
                 <td className="border p-2">{exp.amount}</td>
                 <td className="border p-2">{exp.category}</td>
                 <td className="border p-2">{exp.date}</td>
+                <td className="border p-2">{exp.notes || "Null"}</td>
                 <td className="border p-2">{exp.notes || "Null"}</td>
                 <td className="border p-2 space-x-2">
                   <button

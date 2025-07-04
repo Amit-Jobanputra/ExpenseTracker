@@ -168,7 +168,6 @@ function Dashboard() {
                 <td className="border p-2">{exp.category}</td>
                 <td className="border p-2">{exp.date}</td>
                 <td className="border p-2">{exp.notes || "Null"}</td>
-                <td className="border p-2">{exp.notes || "Null"}</td>
                 <td className="border p-2 space-x-2">
                   <button
                     onClick={() => handleEdit(exp)}

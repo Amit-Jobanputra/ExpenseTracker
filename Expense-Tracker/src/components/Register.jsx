@@ -35,6 +35,9 @@ const Register = () => {
       })
       .catch((error) => {
         console.log(error);
+        const validationErrors = error.response.data.errors;
+        const firstError = Object.values(validationErrors)[0][0]; // Show first error
+        setMessage(firstError);
         setLoading(false);
       });
   };
@@ -76,9 +79,9 @@ const Register = () => {
                   id={item.name}
                   name={item.name}
                   value={formData[item.name]}
-                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
                   placeholder={item.placeholder}
                   onChange={handleChange}
+                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
                 />
               </div>
             ))}

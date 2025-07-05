@@ -3,79 +3,53 @@ import { useEffect, useState } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
+import DashboardComponent from "./components/DashboardComponent";
+import NavBar from "./components/NavBar";
 
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link,useLocation } from "react-router-dom";
 import jscookie from "js-cookie";
 
 import "./App.css";
+const Layout=({children})=>{
+  const location = useLocation();
+  const hideNavBar = ['/dashboard'];
 
+  return(
+    <>
+    {!hideNavBar.includes(location.pathname) && <NavBar />}
+    {children}
+    </>
+  );
+};
 function App() {
-  const [checkUser, checkUserExist] = useState();
+  
+  // const [checkUser, checkUserExist] = useState();
 
-  useEffect(() => {
-    // Check if token exists in cookies
-    if (jscookie.get("token")) {
-      checkUserExist(true);
-    } else {
-      checkUserExist(false);
-    }
-  }, [checkUserExist]);
+  // useEffect(() => {
+  //   // Check if token exists in cookies
+  //   if (jscookie.get("token")) {
+  //     checkUserExist(true);
+  //   } else {
+  //     checkUserExist(false);
+  //   }
+  // }, [checkUserExist]);
 
-  const handleLogout = () => {
-    jscookie.remove("token"); // remove token from cookies
-    window.location.reload();
-    checkUserExist(false); // update state
-  };
+  // const handleLogout = () => {
+  //   jscookie.remove("token"); // remove token from cookies
+  //   window.location.reload();
+  //   checkUserExist(false); // update state
+  // };
 
   return (
     <BrowserRouter>
-      <nav className="bg-gradient-to-r from-teal-600 to-cyan-500 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-extrabold tracking-wide">
-            💸 Expense Tracker
-          </h1>
-
-          <div className="flex gap-6">
-            {!checkUser ? (
-              <>
-                <Link
-                  to="/"
-                  className="hover:underline text-shadow-fuchsia-100 transition duration-200"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="hover:underline text-shadow-fuchsia-100 transition duration-200"
-                >
-                  Register
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/dashboard"
-                  className="hover:underline text-shadow-fuchsia-100 transition duration-200"
-                >
-                  Dashboard
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="hover:cursor-pointer text-shadow-fuchsia-100 transition duration-200 bg-red-600 rounded-lg p-0.5"
-                >
-                  Logout
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
-
+      <Layout>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<DashboardComponent />} />
       </Routes>
+      </Layout>
+      {/* <NavBar checkUser={checkUser} handleLogout={handleLogout} /> */}
     </BrowserRouter>
   );
 }

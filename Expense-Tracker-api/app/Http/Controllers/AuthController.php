@@ -28,39 +28,17 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $r)
-    {
-        try {
-            $r->validate([
-                'email' => 'required|email',
-                'password' => 'required',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation failed',
-                'errors' => $e->errors(),
-            ], 422);
-        }
+   public function login(Request $request)
+{
+    $credentials = $request->only('email', 'password');
 
-        if (!Auth::attempt($r->only('email', 'password'))) {
-            return response()->json([
-                'message' => 'Invalid credentials',
-            ], 401);
-        }
-
-        $user = Auth::user();
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login successful',
-            'token' => $token,
-            'token_type' => 'Bearer',
-            'user' => [
-                'name' => $user->name,
-                'email' => $user->email,
-            ],
-        ], 200);
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        return response()->json(['message' => 'Logged in successfully']);
     }
+
+    return response()->json(['message' => 'Invalid credentials'], 401);
+}
 
     public function logout(Request $r)
     {

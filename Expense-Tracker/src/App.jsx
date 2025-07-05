@@ -61,7 +61,7 @@ function App() {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="hover:underline text-shadow-fuchsia-100 transition duration-200"
+                  className="hover:cursor-pointer text-shadow-fuchsia-100 transition duration-200 bg-red-600 rounded-lg p-0.5"
                 >
                   Logout
                 </button>

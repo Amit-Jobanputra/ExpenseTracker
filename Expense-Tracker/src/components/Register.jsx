@@ -90,7 +90,7 @@ const Register = () => {
               type="submit"
               className="w-full py-3 px-4 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold rounded-md shadow-md hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-300 ease-in-out"
             >
-              {Loading ? "Loading..." : "Submit"}
+              {Loading ? "Loading..." : "Register"}
             </button>
           </form>
           <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">

@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+
 use App\Models\User;
 
 class AuthController extends Controller
 {
     public function register(Request $r)
     {
-        
+
         $data = $r->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -25,25 +27,41 @@ class AuthController extends Controller
             'message' => 'User created successfully',
         ], 201);
     }
+
     public function login(Request $r)
     {
-        $r->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        try {
+            $r->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
+        }
+
         if (!Auth::attempt($r->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Invalid credentials',
             ], 401);
         }
+
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
             'message' => 'Login successful',
             'token' => $token,
             'token_type' => 'Bearer',
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
         ], 200);
     }
+
     public function logout(Request $r)
     {
         $r->user()->currentAccessToken()->delete();
